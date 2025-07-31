@@ -29,6 +29,6 @@ app.post("/broadcast", (req, res) => {
     res.json({ status: "sent" });
 });
 
-server.listen(80, () => {
-    console.log("🟢 WebSocket server running on http://localhost:80");
+server.listen(3001, () => {
+    console.log("🟢 WebSocket server running on http://localhost:3001");
 });

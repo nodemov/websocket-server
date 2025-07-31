@@ -14,7 +14,7 @@ RUN npm install --production
 COPY . .
 
 # Expose the port the app runs on
-EXPOSE 80
+EXPOSE 3001
 
 # Start the server
 CMD ["node", "index.js"]
