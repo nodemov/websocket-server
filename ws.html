@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket Notification Demo</title>
+  <link rel="shortcut icon" href="https://media.flaticon.com/dist/min/img/favicon.ico">
+ <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    #messages { margin-top: 1em; }
+    .message { padding: 0.5em; border-bottom: 1px solid #ccc; }
+    .noti { background-color: #f0f8ff; }
+  </style>
+</head>
+<body>
+
+<h1>WebSocket Notification Demo</h1>
+<button id="sendBtn">Send Test Message</button>
+
+<div id="messages"></div>
+
+<!-- Socket.io client -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<script>
+  // เชื่อมกับ WebSocket server
+  const socket = io("wss://xxxxxxx.com", {
+    transports: ["websocket"], // ป้องกัน fallback เป็น polling
+  });
+
+  const messagesDiv = document.getElementById("messages");
+
+  // รับข้อความจาก server
+  socket.on("chat_message", (msg) => {
+    console.log("New message:", msg);
+
+    // สร้าง div แสดงข้อความ
+    const div = document.createElement("div");
+    div.className = "message noti";
+    div.textContent = msg;
+    messagesDiv.prepend(div);
+
+    // Notification alert (browser)
+    if (Notification.permission === "granted") {
+      new Notification("New WebSocket Message", { body: msg });
+    }
+  });
+
+  // Request permission for notifications
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+
+  // ปุ่มส่ง test message ไป server
+  document.getElementById("sendBtn").addEventListener("click", () => {
+    const testMsg = "Hello from browser!";
+    fetch("https://xxxxxx.com/broadcast", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: testMsg })
+    });
+  });
+</script>
+
+</body>
+</html>
